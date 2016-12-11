@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "seeprom.h"
 
 /*
@@ -13,7 +14,7 @@ seeprom_t *seeprom;
 //#define REMOVE_0
 
 void print_hex(const char *desc, u8 *s, int size) { //Used for printing keys/other values
-	printf(desc);
+	printf("%s", desc);
 #ifndef DONT_PRINT_0X
 	printf("0x");
 #endif
