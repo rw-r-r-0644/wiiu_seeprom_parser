@@ -45,9 +45,9 @@ void print_bc_struct(bc_struct_t bc_struct) {
 	print_hex("size:............................", bc_struct.size, 0x2);
 	print_hex("library version:.................", bc_struct.library_version, 0x2);
 	print_hex("author:..........................", bc_struct.author, 0x2);
-	print_hex("boardType:.......................", bc_struct.boardtype, 0x2);
+	printf   ("boardType:.......................\"%.*s\"\n", 0x2, bc_struct.boardtype);
 	print_hex("boardRevision:...................", bc_struct.boardrevision, 0x2);
-	print_hex("bootSource:......................", bc_struct.bootsource, 0x2);
+	printf   ("bootSource:......................\"%.*s\"\n", 0x2, bc_struct.bootsource);
 	print_hex("ddr3Size:........................", bc_struct.ddr3size, 0x2);
 	print_hex("ddr3Speed:.......................", bc_struct.ddr3speed, 0x2);
 	print_hex("ppcClockMultiplier:..............", bc_struct.ppcclockmultiplier, 0x2);
@@ -69,12 +69,12 @@ void print_sys_prod_struct(sys_prod_t sys_prod) {
 	print_hex("eeprom_version:..................", sys_prod.eeprom_version, 0x4);
 	print_hex("product_area:....................", sys_prod.product_area, 0x4);
 	print_hex("game_region:.....................", sys_prod.game_region, 0x4);
-	print_hex("ntsc_pal:........................", sys_prod.ntsc_pal, 0x4);
-	print_hex("country_code_5ghz:...............", sys_prod.country_code_5ghz, 0x2);
+	printf   ("ntsc_pal:........................\"%.*s\"\n", 0x4, sys_prod.ntsc_pal);
+	printf   ("country_code_5ghz:...............\"%.*s\"\n", 0x2, sys_prod.country_code_5ghz);
 	print_hex("country_code_revision_5ghz:......", sys_prod.country_code_revision_5ghz, 0x2);
-	print_hex("code_id:.........................", sys_prod.code_id, 0x8);
-	print_hex("serial_id:.......................", sys_prod.serial_id, 0x10);
-	print_hex("model_number:....................", sys_prod.model_number, 0x10);
+	printf   ("code_id:.........................\"%.*s\"\n", 0x8, sys_prod.code_id);
+	printf   ("serial_id:.......................\"%.*s\"\n", 0x10, sys_prod.serial_id);
+	printf   ("model_number:....................\"%.*s\"\n", 0x10, sys_prod.model_number);
 	printf   ("---------------------------------------------\n\n");
 }
 
@@ -129,9 +129,29 @@ int main (int argc, char *argv[])
 	print_hex("Wii U factory key:...............", seeprom->wii_u_factory_key, 0x10);
 	print_hex("Wii U devkit key (?):............", seeprom->wii_u_devkit_key, 0x10);
 	print_hex("Wii U USB key seed:..............", seeprom->wii_u_usb_key_seed, 0x10);
-	print_hex("Drive key's status flag:.........", seeprom->drive_key_status_flag, 0x02);
-	print_hex("USB key seed's status flag:......", seeprom->usb_key_seed_status_flag, 0x02);
-	print_hex("Devkit key's status flag:........", seeprom->devkit_key_status_flag, 0x02);
+	
+	printf   ("Drive key's status flag:.........");
+	u16 dksf = seeprom->drive_key_status_flag[0] << 8 | seeprom->drive_key_status_flag[1]; //drive key status flag
+	if (dksf == 0xFFFF) {
+		printf("SET, encrypted with Wii U SEEPROM key (0xFFFF)\n");
+	} else if (dksf == 0x0000) {
+		printf("SET, not encrypted (0x0000)\n");
+	}
+	printf   ("USB key seed's status flag:......");
+	u16 ukssf = seeprom->usb_key_seed_status_flag[0] << 8 | seeprom->usb_key_seed_status_flag[1]; //drive key status flag
+	if (ukssf == 0xFFFF) {
+		printf("SET, encrypted with Wii U SEEPROM key (0xFFFF)\n");
+	} else if (ukssf == 0x0000) {
+		printf("SET, not encrypted (0x0000)\n");
+	}
+	printf   ("Devkit key's status flag:........", seeprom->devkit_key_status_flag, 0x02);
+	u16 dkksf = seeprom->devkit_key_status_flag[0] << 8 | seeprom->devkit_key_status_flag[1]; //drive key status flag
+	if (dkksf == 0xFFFF) {
+		printf("SET, encrypted with a key from OTP (0xFFFF) [whoa, you're using a devkit??]\n");
+	} else if (dkksf == 0x0000) {
+		printf("NOT SET (0x0000)\n");
+	}
+	
 	print_sys_prod_struct(seeprom->sys_prod);
 	printf   ("ASCII Tag 2:.....................\"%.*s\"\n", 0x8, seeprom->ascii_tag2);
 	
