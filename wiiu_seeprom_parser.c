@@ -144,7 +144,7 @@ int main (int argc, char *argv[])
 	} else if (ukssf == 0x0000) {
 		printf("SET, not encrypted (0x0000)\n");
 	}
-	printf   ("Devkit key's status flag:........", seeprom->devkit_key_status_flag, 0x02);
+	printf   ("Devkit key's status flag:........");
 	u16 dkksf = seeprom->devkit_key_status_flag[0] << 8 | seeprom->devkit_key_status_flag[1]; //drive key status flag
 	if (dkksf == 0xFFFF) {
 		printf("SET, encrypted with a key from OTP (0xFFFF) [whoa, you're using a devkit??]\n");
