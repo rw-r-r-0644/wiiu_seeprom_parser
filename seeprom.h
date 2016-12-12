@@ -46,6 +46,28 @@ typedef struct _sys_prod_t {
 	u8 model_number			[0x10];
 } sys_prod_t;
 
+typedef struct _boot_param1_t {
+	u8 control_flags		[0x02];
+	u8 nand_cotrol_flags	[0x02];
+	u8 nand_config_overwrite[0x04];
+	u8 nand_bank_overwrite	[0x04];
+	u8 crc32				[0x04];
+} boot_param1_t;
+
+typedef struct _boot_param2_t {
+	u8 boot1_version		[0x02];
+	u8 boot1_nand_sector	[0x02];
+	u8 empty				[0x08];
+	u8 crc32				[0x04];
+} boot_param2_t;
+
+typedef struct _boot_param3_t {
+	u8 boot1_copy_version	[0x02];
+	u8 boot1_copy_nand_sector[0x02];
+	u8 empty				[0x08];
+	u8 crc32				[0x04];
+} boot_param3_t;
+
 typedef struct _seeprom_struct_t {
 //	Empty.
 	u8 empty1				[0x12];
@@ -106,9 +128,9 @@ typedef struct _seeprom_struct_t {
 	//Unknown
 	u8 unknown[0x10]; 
 	//boot parameters (encrypted with seeprom key)
-	u8 boot_param1[0x10]; //Control flags
-	u8 boot_param2[0x10]; //Boot parameters about boot1
-	u8 boot_param3[0x10]; //Boot parameters about boot1 copy
+	u8 boot_param1_enc[0x10]; //Control flags
+	u8 boot_param2_enc[0x10]; //Boot parameters about boot1
+	u8 boot_param3_enc[0x10]; //Boot parameters about boot1 copy
 	u8 empty3[0x10];
 } seeprom_t;
 
